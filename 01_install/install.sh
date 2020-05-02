@@ -24,7 +24,7 @@ disk_create_partitions () {
     sgdisk -n 1:0:+512M "$DISK_DEVICE"
     sgdisk -t 1:ef00 "$DISK_DEVICE"
     sgdisk -c 1:"UEFI Boot" "$DISK_DEVICE"
-    
+
     sgdisk -n 2:0:0 "$DISK_DEVICE"
     sgdisk -t 2:8300 "$DISK_DEVICE"
     sgdisk -c 2:"LUKS" "$DISK_DEVICE"
@@ -32,7 +32,7 @@ disk_create_partitions () {
 
 disk_detect_partitons () {
     DISK_UEFI=/dev/`lsblk -l -o NAME | grep -v "${DISK_NAME}$" | grep "${DISK_NAME}" | grep "1$"`
-    DISK_LUKS=/dev/`lsblk -l -o NAME | grep -v "${DISK_NAME}$" | grep "${DISK_NAME}" | grep "1$"`    
+    DISK_LUKS=/dev/`lsblk -l -o NAME | grep -v "${DISK_NAME}$" | grep "${DISK_NAME}" | grep "2$"`
 }
 
 disk_setup_uefi () {
