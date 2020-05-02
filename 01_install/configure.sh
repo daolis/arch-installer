@@ -18,7 +18,7 @@ config_keymap () {
 config_locales () {
     sed -i "s/#\(en_US\.UTF-8.*$\)/\1/" /etc/locale.gen
     locale-gen
-    echo <<EOF > /etc/locale.conf
+    cat <<EOF > /etc/locale.conf
 LANG=en_US.UTF-8
 LANGUAGE=en_US
 LC_ALL=C
@@ -32,7 +32,7 @@ ask_hostname () {
 
 config_hostname () {
     echo "${NET_HOSTNAME}" > /etc/hostname
-    echo <<EOF > /etc/hosts
+    cat <<EOF > /etc/hosts
 127.0.0.1      localhost
 ::1            localhost
 127.0.1.1      ${NET_HOSTNAME}.localdomain ${NET_HOSTNAME}
@@ -58,20 +58,22 @@ config_bootloader () {
     bootctl install
 
     mkdir -p /boot/loader
-    echo <<EOF > /boot/loader/loader.conf
+    cat <<EOF > /boot/loader/loader.conf
 default arch
 timeout 1
 EOF
 
     cryptdevice=$(blkid | grep "crypto_LUKS" | grep -o ' UUID="[^"]*"' | cut -c8- | rev | cut -c2- | rev)
     mkdir -p /boot/loader/entries
-    echo <<EOF > /boot/loader/entries/arch.conf
+    cat <<EOF > /boot/loader/entries/arch.conf
 title Archlinux
 linux /vmlinuz-linux
 initrd /initramfs-linux.img
 options cryptdevice=UUID=${cryptdevice}:cryptlvm root=/dev/vg0/root rw loglevel=3
 EOF
 }
+
+ask_hostname
 
 config_clock
 config_keymap

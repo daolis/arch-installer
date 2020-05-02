@@ -67,7 +67,7 @@ disk_mount () {
 bootstrap () {
     pacstrap /mnt base linux linux-firmware base-devel lvm2 zsh vim git dialog wpa_supplicant networkmanager
     genfstab -pU /mnt >> /mnt/etc/fstab
-    echo <<EOF >> /mnt/etc/fstab
+    cat <<EOF >> /mnt/etc/fstab
 
 # Use a ramdisk for the /tmp directory
 tmpfs			/tmp		tmpfs		defaults,noatime,mode=1777	0 0
