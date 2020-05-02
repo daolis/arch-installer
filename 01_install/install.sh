@@ -28,6 +28,8 @@ disk_create_partitions () {
     sgdisk -n 2:0:0 "$DISK_DEVICE"
     sgdisk -t 2:8300 "$DISK_DEVICE"
     sgdisk -c 2:"LUKS" "$DISK_DEVICE"
+
+    partprobe "$DISK_DEVICE"
 }
 
 disk_detect_partitons () {
