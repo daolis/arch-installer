@@ -31,8 +31,8 @@ disk_create_partitions () {
 }
 
 disk_detect_partitons () {
-    DISK_UEFI=/dev/`lsblk -l -o NAME | grep -v "${DISK_NAME}$" | grep "${DISK_NAME}" | grep "1$")`
-    DISK_LUKS=/dev/`lsblk -l -o NAME | grep -v "${DISK_NAME}$" | grep "${DISK_NAME}" | grep "1$")`    
+    DISK_UEFI=/dev/`lsblk -l -o NAME | grep -v "${DISK_NAME}$" | grep "${DISK_NAME}" | grep "1$"`
+    DISK_LUKS=/dev/`lsblk -l -o NAME | grep -v "${DISK_NAME}$" | grep "${DISK_NAME}" | grep "1$"`    
 }
 
 disk_setup_uefi () {
