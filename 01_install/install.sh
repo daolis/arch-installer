@@ -74,7 +74,14 @@ EOF
 }
 
 configure () {
-    echo "DISK_LUKS=${DISK_LUKS}" | cat - configure.sh | arch-chroot /mnt /bin/bash
+    echo <<EOF > /mnt/configure.sh
+#!/bin/bash
+DISK_LUKS=${DISK_LUKS}
+EOF
+    cat configure.sh >> /mnt/configure.sh
+    chmod 755 /mnt/configure.sh
+    arch-chroot /mnt /bin/bash -c "/configure.sh"
+    rm /mnt/configure.sh
 }
 
 cleanup () {
