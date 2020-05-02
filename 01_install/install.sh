@@ -58,7 +58,7 @@ disk_mount () {
     mount /dev/mapper/vg0-root /mnt
     swapon /dev/mapper/vg0-swap
     mkdir /mnt/boot
-    mount "${DISK_DEVICE}1" /mnt/boot
+    mount "${DISK_UEFI}" /mnt/boot
 }
 
 bootstrap () {
