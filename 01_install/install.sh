@@ -98,7 +98,7 @@ disk_setup_luks
 ask_continue
 disk_mount
 
-ask_hostname
+ask_continue
 bootstrap
 
 ask_continue
