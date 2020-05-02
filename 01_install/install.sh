@@ -75,7 +75,7 @@ EOF
 
 configure () {
     echo <<EOF > /mnt/configure.sh
-#!/bin/bash
+#!/usr/bin/bash
 DISK_LUKS=${DISK_LUKS}
 EOF
     cat configure.sh >> /mnt/configure.sh
