@@ -1,4 +1,4 @@
-# This script is not meant to be executed directly
+#!/usr/bin/bash
 
 set -euxo pipefail
 
@@ -63,7 +63,7 @@ default arch
 timeout 1
 EOF
 
-    cryptdevice=$(blkid | grep "${DISK_LUKS}" | grep -o ' UUID="[^"]*"' | cut -c8- | rev | cut -c2- | rev)
+    cryptdevice=$(blkid | grep "crypto_LUKS" | grep -o ' UUID="[^"]*"' | cut -c8- | rev | cut -c2- | rev)
     mkdir -p /boot/loader/entries
     echo <<EOF > /boot/loader/entries/arch.conf
 title Archlinux
@@ -73,22 +73,11 @@ options cryptdevice=UUID=${cryptdevice}:cryptlvm root=/dev/vg0/root rw loglevel=
 EOF
 }
 
-ask_continue
 config_clock
-
-ask_continue
 config_keymap
-
-ask_continue
 config_locales
-
-ask_hostname
 config_hostname
-
-ask_continue
 config_root
-
-ask_continue
 config_user
 
 ask_continue

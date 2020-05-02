@@ -74,12 +74,7 @@ EOF
 }
 
 configure () {
-    echo <<EOF > /mnt/configure.sh
-#!/usr/bin/bash
-DISK_LUKS=${DISK_LUKS}
-EOF
-    cat configure.sh >> /mnt/configure.sh
-    chmod 755 /mnt/configure.sh
+    cp configure.sh /mnt/configure.sh
     arch-chroot /mnt /bin/bash -c "/configure.sh"
     rm /mnt/configure.sh
 }
@@ -95,17 +90,9 @@ disk_print_partitions
 ask_continue
 disk_create_partitions
 disk_detect_partitons
-
-ask_continue
 disk_setup_uefi
-
-ask_continue
 disk_setup_luks
-
-ask_continue
 disk_mount
-
-ask_continue
 bootstrap
 
 ask_continue
