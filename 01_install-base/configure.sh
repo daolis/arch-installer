@@ -85,6 +85,7 @@ config_locales
 config_hostname
 config_root
 config_user
+config_enable_networkmanager
 
 ask_continue
 config_mkinitcpio

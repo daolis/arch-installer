@@ -59,6 +59,7 @@ disk_setup_luks () {
 
 disk_mount () {
     mount /dev/mapper/vg0-root /mnt
+    mount /dev/mapper/vg0-home /mnt/home
     swapon /dev/mapper/vg0-swap
     mkdir /mnt/boot
     mount "${DISK_UEFI}" /mnt/boot

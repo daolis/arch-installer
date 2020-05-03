@@ -15,7 +15,7 @@ https://wiki.archlinux.org/index.php/installation_guide
 
 To download and prepare a USB install medium run:
 
-``` bash
+``` shell
 cd 00_create-image
 ./image.sh
 ```
@@ -26,7 +26,7 @@ Boot the machine from the USB drive.
 
 Afterwards clone this repository to run the install script.
 
-``` bash
+``` shell
 loadkeys de
 wifi-menu
 pacman -Sy git
@@ -41,16 +41,12 @@ each step can be verfied for correctness.
 
 ## Boot the system
 
-After you have booted into the system, you can use the package list to
-get to a usable environment:
+After you have booted into the system, you can connect to wifi and
+install packages.
 
-``` bash
+``` shell
 nmcli device wifi connect <SSID> password <password>
-cd arch-installer/02_install-packages
-./install.sh
 ```
-
-This will also enable needed services to start on next boot.
 
 ## Troubleshooting
 
