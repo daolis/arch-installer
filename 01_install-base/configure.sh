@@ -73,6 +73,10 @@ options cryptdevice=UUID=${cryptdevice}:cryptlvm root=/dev/vg0/root rw loglevel=
 EOF
 }
 
+config_enable_networkmanager () {
+    systemctl enable NetworkManager.service
+}
+
 ask_hostname
 
 config_clock

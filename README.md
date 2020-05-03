@@ -31,13 +31,26 @@ loadkeys de
 wifi-menu
 pacman -Sy git
 git clone https://github.com/kautsig/arch-installer.git
-cd arch-installer/01_install
+cd arch-installer/01_install-base
 ./install.sh
 ```
 
 This is an interactive script, it will ask for disk, hostname,
 etc. After every step it waits for confirmation before continuing, so
 each step can be verfied for correctness.
+
+## Boot the system
+
+After you have booted into the system, you can use the package list to
+get to a usable environment:
+
+``` bash
+nmcli device wifi connect <SSID> password <password>
+cd arch-installer/02_install-packages
+./install.sh
+```
+
+This will also enable needed services to start on next boot.
 
 ## Troubleshooting
 
