@@ -20,8 +20,6 @@ config_locales () {
     locale-gen
     cat <<EOF > /etc/locale.conf
 LANG=en_US.UTF-8
-LANGUAGE=en_US
-LC_ALL=C
 EOF
 }
 
@@ -41,11 +39,13 @@ EOF
 
 config_root () {
     passwd
+    chsh -s /usr/bin/zsh root
 }
 
 config_user() {
     useradd -m -g users -G wheel -s /bin/zsh cr
     passwd cr
+    chsh -s /usr/bin/zsh cr
 }
 
 config_mkinitcpio () {
