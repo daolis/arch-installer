@@ -73,8 +73,12 @@ options cryptdevice=UUID=${cryptdevice}:cryptlvm root=/dev/vg0/root rw loglevel=
 EOF
 }
 
-config_enable_networkmanager () {
+config_enable_services () {
     systemctl enable NetworkManager.service
+
+    systemctl enable systemd-resolved.service
+    rm -f /etc/resolv.conf
+    ln -s /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
 }
 
 ask_hostname
