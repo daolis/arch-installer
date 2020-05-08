@@ -79,6 +79,7 @@ config_enable_services () {
     systemctl enable systemd-resolved.service
     rm -f /etc/resolv.conf
     ln -s /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
+    sed -i '/^#Cache=yes/a Cache=no-negative' /etc/resolved.conf
 }
 
 ask_hostname
