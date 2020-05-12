@@ -18,7 +18,7 @@ disk_print_partitions () {
 }
 
 disk_create_partitions () {
-    sgdisk --zap-all "$DISK_DEVICE"
+    sgdisk --zap-all --clear "$DISK_DEVICE"
     sgdisk -o "$DISK_DEVICE"
 
     sgdisk -n 1:0:+512M "$DISK_DEVICE"
@@ -59,6 +59,7 @@ disk_setup_luks () {
 
 disk_mount () {
     mount /dev/mapper/vg0-root /mnt
+    mkdir /mnt/home
     mount /dev/mapper/vg0-home /mnt/home
     swapon /dev/mapper/vg0-swap
     mkdir /mnt/boot
