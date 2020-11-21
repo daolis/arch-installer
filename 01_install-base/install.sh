@@ -48,7 +48,7 @@ disk_setup_uefi () {
 }
 
 disk_setup () {
-    if $USE_LUKS: then
+    if $USE_LUKS; then
         cryptsetup -c aes-xts-plain64 -y --use-random luksFormat "${DISK_MAIN}"
         cryptsetup luksOpen "${DISK_MAIN}" luks
         pvcreate /dev/mapper/luks
@@ -105,7 +105,7 @@ ask_use_luks
 disk_create_partitions
 disk_detect_partitons
 disk_setup_uefi
-disk_setup_luks
+disk_setup
 disk_mount
 bootstrap
 

@@ -68,7 +68,7 @@ title Archlinux
 linux /vmlinuz-linux
 initrd /initramfs-linux.img
 EOF
-    if $USE_LUKS: then
+    if $USE_LUKS; then
         cryptdevice=$(blkid | grep "crypto_LUKS" | grep -o ' UUID="[^"]*"' | cut -c8- | rev | cut -c2- | rev)
         echo "options cryptdevice=UUID=${cryptdevice}:cryptlvm root=/dev/vg0/root rw loglevel=3" >> /boot/loader/entries/arch.conf
     else
