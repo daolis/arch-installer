@@ -62,21 +62,26 @@ config_bootloader () {
 default arch
 timeout 1
 EOF
-
-    cryptdevice=$(blkid | grep "crypto_LUKS" | grep -o ' UUID="[^"]*"' | cut -c8- | rev | cut -c2- | rev)
     mkdir -p /boot/loader/entries
     cat <<EOF > /boot/loader/entries/arch.conf
 title Archlinux
 linux /vmlinuz-linux
 initrd /initramfs-linux.img
-options cryptdevice=UUID=${cryptdevice}:cryptlvm root=/dev/vg0/root rw loglevel=3
 EOF
+    if $USE_LUKS: then
+        cryptdevice=$(blkid | grep "crypto_LUKS" | grep -o ' UUID="[^"]*"' | cut -c8- | rev | cut -c2- | rev)
+        echo "options cryptdevice=UUID=${cryptdevice}:cryptlvm root=/dev/vg0/root rw loglevel=3" >> /boot/loader/entries/arch.conf
+    else
+        rootdevice=$(blkid | grep "vg0-root" | grep -o ' UUID="[^"]*"' | cut -c8- | rev | cut -c2- | rev)
+        echo "options root=UUID=${rootdevice} rw" >> /boot/loader/entries/arch.conf
+    fi
 }
 
 config_enable_services () {
     systemctl enable NetworkManager.service
 }
 
+echo "USE_LUKS=${USE_LUKS}"
 ask_hostname
 
 config_clock

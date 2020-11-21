@@ -6,6 +6,11 @@ ask_continue () {
     read -p "Continue? "
 }
 
+ask_use_luks () {
+    read -p "Encrypt the disk with luks?: false/[true] " LUKS
+    USE_LUKS=${LUKS:-false}
+}
+
 ask_disk_device () {
     lsblk
     read -p "Target Device [sdb]: " DISK_NAME
@@ -27,7 +32,7 @@ disk_create_partitions () {
 
     sgdisk -n 2:0:0 "$DISK_DEVICE"
     sgdisk -t 2:8300 "$DISK_DEVICE"
-    sgdisk -c 2:"LUKS" "$DISK_DEVICE"
+    sgdisk -c 2:"MAIN" "$DISK_DEVICE"
 
     partprobe "$DISK_DEVICE"
     sleep 5
@@ -35,19 +40,24 @@ disk_create_partitions () {
 
 disk_detect_partitons () {
     DISK_UEFI=/dev/`lsblk -l -o NAME | grep -v "${DISK_NAME}$" | grep "${DISK_NAME}" | grep "1$"`
-    DISK_LUKS=/dev/`lsblk -l -o NAME | grep -v "${DISK_NAME}$" | grep "${DISK_NAME}" | grep "2$"`
+    DISK_MAIN=/dev/`lsblk -l -o NAME | grep -v "${DISK_NAME}$" | grep "${DISK_NAME}" | grep "2$"`
 }
 
 disk_setup_uefi () {
     mkfs.vfat -F32 "${DISK_UEFI}"
 }
 
-disk_setup_luks () {
-    cryptsetup -c aes-xts-plain64 -y --use-random luksFormat "${DISK_LUKS}"
-    cryptsetup luksOpen "${DISK_LUKS}" luks
+disk_setup () {
+    if $USE_LUKS: then
+        cryptsetup -c aes-xts-plain64 -y --use-random luksFormat "${DISK_MAIN}"
+        cryptsetup luksOpen "${DISK_MAIN}" luks
+        pvcreate /dev/mapper/luks
+        vgcreate vg0 /dev/mapper/luks
+    else
+        pvcreate "${DISK_MAIN}"
+        vgcreate vg0 "${DISK_MAIN}"
+    fi
 
-    pvcreate /dev/mapper/luks
-    vgcreate vg0 /dev/mapper/luks
     lvcreate -L 8G vg0 --name swap
     lvcreate -L 30G vg0 --name root
     lvcreate -l100%FREE vg0 --name home
@@ -78,7 +88,7 @@ EOF
 
 configure () {
     cp configure.sh /mnt/configure.sh
-    arch-chroot /mnt /bin/bash -c "/configure.sh"
+    arch-chroot /mnt /bin/bash -c "USE_LUKS=${USE_LUKS} /configure.sh"
     rm /mnt/configure.sh
 }
 
@@ -91,6 +101,7 @@ ask_disk_device
 disk_print_partitions
 
 ask_continue
+ask_use_luks
 disk_create_partitions
 disk_detect_partitons
 disk_setup_uefi
