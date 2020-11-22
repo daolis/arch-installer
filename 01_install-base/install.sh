@@ -77,7 +77,7 @@ disk_mount () {
 }
 
 bootstrap () {
-    pacstrap /mnt base linux linux-firmware base-devel lvm2 zsh grml-zsh-config vim git dialog wpa_supplicant networkmanager
+    pacstrap /mnt base linux linux-firmware base-devel lvm2 zsh grml-zsh-config vim git dialog wpa_supplicant networkmanager openssh
     genfstab -pU /mnt >> /mnt/etc/fstab
     cat <<EOF >> /mnt/etc/fstab
 

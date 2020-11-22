@@ -38,14 +38,19 @@ EOF
 }
 
 config_root () {
+    echo "Set password for root"
     passwd
     chsh -s /usr/bin/zsh root
 }
 
 config_user() {
-    useradd -m -g users -G wheel -s /bin/zsh cr
-    passwd cr
-    chsh -s /usr/bin/zsh cr
+    read -p "Enter username to create default user (empty to skip): " USERNAME
+    if [ -n $USERNAME ]; then
+        useradd -m -g users -G wheel -s /bin/zsh $USERNAME
+        echo "Set password for $USERNAME"
+        passwd $USERNAME
+        chsh -s /usr/bin/zsh $USERNAME
+    fi
 }
 
 config_mkinitcpio () {
@@ -79,6 +84,7 @@ EOF
 
 config_enable_services () {
     systemctl enable NetworkManager.service
+    systemctl enable sshd
 }
 
 echo "USE_LUKS=${USE_LUKS}"
