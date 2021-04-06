@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-set -euxo pipefail
+set -euo pipefail
 
 ask_continue () {
     read -p "Continue? "
@@ -9,6 +9,15 @@ ask_continue () {
 ask_use_luks () {
     read -p "Encrypt the disk with luks?: false/[true] " LUKS
     USE_LUKS=${LUKS:-false}
+}
+
+ask_part_free () {
+    read -p "Leave free space on disk at the end (must start with '-' e.g. '-80G') (Maybe to install 2nd OS)?: [0] " P_FREE
+    PART_FREE=${P_FREE:-0}
+	if [[ $USE_LUKS != "0" ]] && [[ $USE_LUKS != -* ]]; then
+		echo "Free space has to start with '-'"
+		exit 1
+	fi
 }
 
 ask_disk_device () {
@@ -30,7 +39,7 @@ disk_create_partitions () {
     sgdisk -t 1:ef00 "$DISK_DEVICE"
     sgdisk -c 1:"UEFI Boot" "$DISK_DEVICE"
 
-    sgdisk -n 2:0:0 "$DISK_DEVICE"
+    sgdisk -n 2:0:$PART_FREE "$DISK_DEVICE"
     sgdisk -t 2:8300 "$DISK_DEVICE"
     sgdisk -c 2:"MAIN" "$DISK_DEVICE"
 
@@ -101,6 +110,7 @@ ask_disk_device
 disk_print_partitions
 
 ask_continue
+ask_part_free
 ask_use_luks
 disk_create_partitions
 disk_detect_partitons
